@@ -12,19 +12,20 @@ import { formatedBalanceData } from "../../helper/Formatter";
 
 const HomePage = () => {
   const address = useAddress();
-  const { provider, connected, chainID } = useWeb3Context();
+  const { provider, connected, chainID, balance } = useWeb3Context();
   console.log(chainID);
+  console.log(balance);
   const [processing, setProcessing] = useState(false);
-  const [balance, setBalance] = useState("");
-  const loadEthBalance = async () => {
-    let userBalance = await provider.getBalance(connectedAddress);
-    const balanceInEth = ethers.utils.formatEther(userBalance);
-    setBalance(balanceInEth);
-  };
+  // const [balance, setBalance] = useState("");
+  // const loadEthBalance = async () => {
+  //   let userBalance = await provider.getBalance(connectedAddress);
+  //   const balanceInEth = ethers.utils.formatEther(userBalance);
+  //   setBalance(balanceInEth);
+  // };
 
-  useEffect(() => {
-    loadEthBalance;
-  }, [balance]);
+  // useEffect(() => {
+  //   loadEthBalance;
+  // }, [balance]);
   return (
     <div>
       {connected && (

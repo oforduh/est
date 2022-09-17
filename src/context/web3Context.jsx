@@ -4,6 +4,7 @@ import { StaticJsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { EnvHelper } from "../helper/Environment";
 import { toast } from "react-toastify";
+import { ethers } from "ethers";
 
 const Web3Context = React.createContext(null);
 
@@ -33,6 +34,7 @@ export const Web3ContextProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
   const [provider, setProvider] = useState(new StaticJsonRpcProvider(uri));
   const [address, setAddress] = useState("");
+  const [balance, setBalance] = useState("");
 
   function getTestnetURI() {
     return "https://data-seed-prebsc-1-s2.binance.org:8545";
@@ -144,6 +146,13 @@ export const Web3ContextProvider = ({ children }) => {
         );
       }
       const connectedAddress = await connectedProvider.getSigner().getAddress();
+      console.log(connectedAddress);
+      let userBalance = await connectedProvider.getBalance(connectedAddress);
+      const balanceInEth = ethers.utils.formatEther(userBalance);
+      console.log(userBalance);
+      console.log(balanceInEth);
+      setBalance(balanceInEth);
+
       setAddress(connectedAddress);
       setProvider(connectedProvider);
       setConnected(true);
@@ -175,6 +184,7 @@ export const Web3ContextProvider = ({ children }) => {
       address,
       chainID,
       web3Modal,
+      balance,
     }),
     [
       connect,
@@ -185,6 +195,7 @@ export const Web3ContextProvider = ({ children }) => {
       address,
       chainID,
       web3Modal,
+      balance,
     ]
   );
   return (
