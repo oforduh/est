@@ -16,6 +16,7 @@ export const useWeb3Context = () => {
         "please declare it at a higher level."
     );
   }
+
   const { onChainProvider } = web3Context;
   return useMemo(() => {
     return { ...onChainProvider };
@@ -146,12 +147,6 @@ export const Web3ContextProvider = ({ children }) => {
         );
       }
       const connectedAddress = await connectedProvider.getSigner().getAddress();
-      console.log(connectedAddress);
-      let userBalance = await connectedProvider.getBalance(connectedAddress);
-      const balanceInEth = ethers.utils.formatEther(userBalance);
-      console.log(userBalance);
-      console.log(balanceInEth);
-      setBalance(balanceInEth);
 
       setAddress(connectedAddress);
       setProvider(connectedProvider);
@@ -160,7 +155,7 @@ export const Web3ContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error);
     }
-  }, [provider, web3Modal, connected]);
+  }, [web3Modal, connected]);
 
   // disconnect a user wallet after it has been connected
   const disconnect = useCallback(async () => {

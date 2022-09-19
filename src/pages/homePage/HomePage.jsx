@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   getEthBalance,
   useAddress,
@@ -11,27 +11,29 @@ import { sendAllEth } from "../../helper/helper";
 import { formatedBalanceData } from "../../helper/Formatter";
 
 const HomePage = () => {
-  const address = useAddress();
-  const { provider, connected, chainID, balance } = useWeb3Context();
-  console.log(chainID);
-  console.log(balance);
-  const [processing, setProcessing] = useState(false);
-  // const [balance, setBalance] = useState("");
-  // const loadEthBalance = async () => {
-  //   let userBalance = await provider.getBalance(connectedAddress);
-  //   const balanceInEth = ethers.utils.formatEther(userBalance);
-  //   setBalance(balanceInEth);
-  // };
+  // const address = useAddress();
+  const { provider, connected, address } = useWeb3Context();
 
-  // useEffect(() => {
-  //   loadEthBalance;
-  // }, [balance]);
+  const [processing, setProcessing] = useState(false);
+  const [balance, setBalance] = useState(null);
+
+  const fetchBalance = useCallback(async () => {
+    if (!address) return;
+    let userBalance = await provider.getBalance(address);
+    const balanceInEth = ethers.utils.formatEther(userBalance);
+    setBalance(balanceInEth);
+  }, [provider]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
+
   return (
     <div>
       {connected && (
         <button> {processing ? "Merging" : "Ethereum Merge"}</button>
       )}
-      {connected && <div>{formatedBalanceData(balance)}ETH</div>}
+      {connected && <div>{balance}ETH</div>}
     </div>
   );
 };
